@@ -1,0 +1,26 @@
+{
+    "name": "C# (.NET) and PostgreSQL (Community)",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspace",
+	"customizations": {
+		"vscode": {		
+			"extensions": [
+				"ms-dotnettools.csharp",
+				"ms-azuretools.vscode-azurefunctions"
+			]
+		}
+	},
+    "forwardPorts": [7071],
+	"containerEnv": {
+		"finhub_api_baseUrl": "${localEnv:finhub_api_baseUrl}",
+		"finhub_api_token": "${localEnv:finhub_api_token}"
+	},
+	"remoteUser": "root",
+	"features": {
+		"git": "os-provided",
+		"azure-cli": "latest",
+		"powershell": "7.1"
+	},
+	"postCreateCommand": "dotnet restore"
+}
