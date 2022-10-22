@@ -12,10 +12,6 @@
 		}
 	},
     "forwardPorts": [7071],
-	"containerEnv": {
-		"finhub_api_baseUrl": "${localEnv:finhub_api_baseUrl}",
-		"finhub_api_token": "${localEnv:finhub_api_token}"
-	},
 	"remoteUser": "root",
 	"features": {
 		"git": "os-provided",
