@@ -39,3 +39,5 @@ else
     echo "SQ: Access json file found. Skipping setup"
 fi
 
+echo "Git: Copying post-commit.sh as post-commit git hook"
+cp /workspace/.devcontainer/scripts/post-commit.sh /workspace/.git/hooks/post-commit

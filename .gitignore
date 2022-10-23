@@ -267,3 +267,5 @@ __pycache__/
 *.local.json
 
 # testing git-hooks attempt -2
+.sonarqube
+coverage.xml

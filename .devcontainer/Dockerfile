@@ -5,3 +5,8 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 
 RUN apt update
 RUN apt install -y jq
+
+RUN dotnet tool install --global dotnet-sonarscanner
+RUN dotnet tool install --global dotnet-coverage
+
+RUN apt install openjdk-11-jre -y

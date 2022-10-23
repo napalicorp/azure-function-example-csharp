@@ -19,5 +19,5 @@
 		"powershell": "7.1"
 	},
 	"postCreateCommand": "dotnet restore",
-	"postStartCommand": "/workspace/.devcontainer/run-post-start.sh"
+	"postStartCommand": "/workspace/.devcontainer/scripts/post-devcontainer-start.sh"
 }
