@@ -13,7 +13,7 @@ setup_sq_project() {
         project=$(curl -u admin:admin "http://localhost:9000/api/projects/create" -X POST \
         --header "Content-Type: application/x-www-form-urlencoded" \
         -d "project=$project_name&name=$project_name" 2>/dev/null)
-        project_key=$($project | jq ".project.key")
+        project_key=$(echo $project | jq ".project.key")
     else
         echo "SQ: Project: $project_name already exists"
         project_key=$(echo $project | jq ".key")
@@ -39,5 +39,10 @@ else
     echo "SQ: Access json file found. Skipping setup"
 fi
 
+echo "Scripts: Make scripts executable"
+chmod +x /workspace/.devcontainer/scripts/post-commit.sh
+chmod +x /workspace/.devcontainer/scripts/run-sonar-scanner.sh
+
 echo "Git: Copying post-commit.sh as post-commit git hook"
 cp /workspace/.devcontainer/scripts/post-commit.sh /workspace/.git/hooks/post-commit
+chmod +x /workspace/.git/hooks/post-commit
