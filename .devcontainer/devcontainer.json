@@ -11,7 +11,7 @@
 			]
 		}
 	},
-    "forwardPorts": [7071],
+    "forwardPorts": [7071,"sonarqube:9000"],
 	"remoteUser": "root",
 	"features": {
 		"git": "os-provided",
