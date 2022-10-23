@@ -18,5 +18,6 @@
 		"azure-cli": "latest",
 		"powershell": "7.1"
 	},
-	"postCreateCommand": "dotnet restore"
+	"postCreateCommand": "dotnet restore",
+	"postStartCommand": "/workspace/.devcontainer/run-post-start.sh"
 }
