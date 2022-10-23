@@ -8,6 +8,7 @@ namespace Function.Domain.Services.HttpClients
 {
     public class FinhubHttpClient
     {
+        private readonly string _deliberateIssue = "added unused member to generate a sq issue";
         public HttpClient _client { get; }
 
         public FinhubHttpClient(HttpClient client){
