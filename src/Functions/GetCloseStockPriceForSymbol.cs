@@ -16,8 +16,8 @@ namespace Example.Function
         private readonly IStockDataProvider _stockDataProvider;
         private readonly IHttpHelper _httpHelper;
         private readonly ILogger<GetOpenStockPriceForSymbol> _logger;
-
         private string deliberateIssue3 = "test";
+        private string deliberateIssue4 = "test4";
 
         public GetCloseStockPriceForSymbol(
                     IStockDataProvider stockDataProvider,
