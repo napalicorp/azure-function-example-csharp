@@ -7,6 +7,7 @@ namespace Function.Domain.Providers
 {
     public class FinhubProvider : IStockDataProvider
     {
+        private bool _deliveberateIssue6 = true;
         private readonly FinhubHttpClient _client;
         private readonly IFinhubDataMapper _stockDataMapper;
         
