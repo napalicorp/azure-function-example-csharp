@@ -39,8 +39,8 @@ else
 
     dotnet sonarscanner begin /k:$project /d:sonar.login=$token /d:sonar.host.url=http://localhost:9000 \
     /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml \
-    /d:sonar.dependencyCheck.jsonReportPath="dependency-check-report.json" \
-    /d:sonar.dependencyCheck.htmlReportPath="dependency-check-report.html"
+    /d:sonar.dependencyCheck.jsonReportPath="/workspace/dependency-check-report.json" \
+    /d:sonar.dependencyCheck.htmlReportPath="/workspace/dependency-check-report.html"
     dotnet build
     dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
     dotnet sonarscanner end /d:sonar.login=$token

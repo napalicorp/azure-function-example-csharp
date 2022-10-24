@@ -269,3 +269,6 @@ __pycache__/
 # testing git-hooks attempt -2
 .sonarqube
 coverage.xml
+dependency-check-report.html
+.gitignore
+dependency-check-report.json
