@@ -1,26 +1,10 @@
 #!/bin/bash
 
 ENV_VAR_FILE=/workspace/.devcontainer/local.env
-
-while getopts ":w:t:p:" opt; do
-  case $opt in
-    w) workingDir="$OPTARG"
-    ;;
-    \?) echo "Invalid option -$OPTARG" >&2
-    exit 1
-    ;;
-  esac
-
-  case $OPTARG in
-    -*) echo "Option $opt needs a valid argument"
-    exit 1
-    ;;
-  esac
-done
-
+workingDir=$1
 cd $workingDir
 cwd=$(pwd)
-echo $cwd
+echo "Current working directory: $workingDir"
 
 if [ ! -f $ENV_VAR_FILE ]
 then
