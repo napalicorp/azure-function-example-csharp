@@ -101,7 +101,7 @@ setup_sq_project $repo_name
 
 echo "Scripts: Make scripts executable"
 chmod +x /workspace/.devcontainer/scripts/post-commit.sh
-chmod +x /workspace/.devcontainer/scripts/run-sonar-scanner.sh
+chmod +x /workspace/.devcontainer/scripts/run-code-scan.sh
 
 echo "Git: Copying post-commit.sh as post-commit git hook"
 cp /workspace/.devcontainer/scripts/post-commit.sh /workspace/.git/hooks/post-commit
