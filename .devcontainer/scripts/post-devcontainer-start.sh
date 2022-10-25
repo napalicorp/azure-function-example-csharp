@@ -5,6 +5,7 @@ ENV_VAR_FILE=/workspace/.devcontainer/local.env
 init_env_config() {
     printf "SQ_USER=admin\n" >> $ENV_VAR_FILE
     printf "SQ_PASSWORD=admin\n" >> $ENV_VAR_FILE
+    printf "DT_AUTH_TOKEN=dt-api-key\n" >> $ENV_VAR_FILE
 }
 
 load_env_vars() {
