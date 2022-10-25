@@ -1,19 +1,47 @@
 #!/bin/bash
 
-SQ_ACCESS_JSON_FILENAME="/workspace/.devcontainer/sq-access.local.json"
+ENV_VAR_FILE=/workspace/.devcontainer/local.env
+
+init_env_config() {
+    printf "SQ_USER=admin\n" >> $ENV_VAR_FILE
+    printf "SQ_PASSWORD=admin\n" >> $ENV_VAR_FILE
+}
+
+load_env_vars() {
+    if [ ! -f $ENV_VAR_FILE ]
+    then
+        touch $ENV_VAR_FILE
+        init_env_config
+    fi
+    export $(cat $ENV_VAR_FILE | xargs) >/dev/null
+}
 
 setup_sq_project() {
     project_name=$1
+    
     echo "SQ: Checking if project: $project_name exists"
     project_key="null"
-    project=$(curl -u admin:admin "http://localhost:9000/api/projects/search?q=$project_name&format=json" 2>/dev/null | jq ".components[0]")
+    response=$(curl -f -u $SQ_USER:$SQ_PASSWORD "http://localhost:9000/api/projects/search?q=$project_name&format=json" 2>/dev/null)
+    if grep -q "$response" <<< "error";
+    then
+        >&2 echo "SQ: Failed to query projects"
+        exit 1
+    fi
+
+    project=$(echo $response | jq ".components[0]")
     if [ "$project" == "null" ] 
     then
         echo "SQ: Project: $project_name does not exist. Attempt to create it."
-        project=$(curl -u admin:admin "http://localhost:9000/api/projects/create" -X POST \
+        response=$(curl -f -u $SQ_USER:$SQ_PASSWORD "http://localhost:9000/api/projects/create" -X POST \
         --header "Content-Type: application/x-www-form-urlencoded" \
         -d "project=$project_name&name=$project_name" 2>/dev/null)
-        project_key=$(echo $project | jq ".project.key")
+        if grep -q "$response" <<< "error";
+        then
+            >&2 echo "ERR: Failed to create the project"
+            exit 1
+        fi
+
+        project_key=$(echo $response | jq ".project.key")
     else
         echo "SQ: Project: $project_name already exists"
         project_key=$(echo $project | jq ".key")
@@ -21,23 +49,39 @@ setup_sq_project() {
     echo "SQ: Project key: $project_key"
     
     token_id=$(cat /proc/sys/kernel/random/uuid)
-    user_token=$(curl -u admin:admin "http://localhost:9000/api/user_tokens/generate" -X POST \
+    response=$(curl -f -u $SQ_USER:$SQ_PASSWORD "http://localhost:9000/api/user_tokens/generate" -X POST \
         --header "Content-Type: application/x-www-form-urlencoded" \
-        -d "name=$token_id" 2>/dev/null | jq ".token")
+        -d "name=$token_id" 2>/dev/null)
+    if grep -q "$response" <<< "error";
+    then
+        >&2 echo "ERR: Failed to create the token"
+        exit 1
+    fi
+    user_token=$(echo $response | jq ".token")
     echo "SQ: Generated user token: $user_token"
 
-    echo "{\"key\":$project_key, \"token\":$user_token}" > $SQ_ACCESS_JSON_FILENAME 
+    if [ -z "$project_key" ]
+    then
+        >&2 echo "ERR: Project key is empty"
+    else
+        printf "SQ_PROJECT_KEY=$project_key\n" >> $ENV_VAR_FILE
+    fi
+
+    if [ -z "$user_token" ]
+    then
+        >&2 echo "ERR: User token is empty"
+    else
+        printf "SQ_AUTH_TOKEN=$user_token\n" >> $ENV_VAR_FILE
+    fi
+
     
 }
 
-if [ ! -f $SQ_ACCESS_JSON_FILENAME ]
-then
-    echo "SQ: Access json file not found. Setting up project"
-    repo_name=$(basename -s .git `git config --get remote.origin.url`)
-    setup_sq_project $repo_name
-else
-    echo "SQ: Access json file found. Skipping setup"
-fi
+load_env_vars
+env
+echo "SQ: Start setting up the SQ project"
+repo_name=$(basename -s .git `git config --get remote.origin.url`)
+setup_sq_project $repo_name
 
 echo "Scripts: Make scripts executable"
 chmod +x /workspace/.devcontainer/scripts/post-commit.sh
@@ -45,4 +89,3 @@ chmod +x /workspace/.devcontainer/scripts/run-sonar-scanner.sh
 
 echo "Git: Copying post-commit.sh as post-commit git hook"
 cp /workspace/.devcontainer/scripts/post-commit.sh /workspace/.git/hooks/post-commit
-chmod +x /workspace/.git/hooks/post-commit
