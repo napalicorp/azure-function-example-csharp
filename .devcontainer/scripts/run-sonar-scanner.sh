@@ -28,16 +28,11 @@ then
 else
     export $(cat $ENV_VAR_FILE | xargs) >/dev/null
 
-    echo "SQ: Environment config found. Running SonarScan"
-    token=$(cat $SQ_ACCESS_JSON_FILENAME | jq -r ".token")
-    project=$(cat $SQ_ACCESS_JSON_FILENAME | jq -r ".key")
-    echo "SQ: key=$project , token=$token"
-
-    dotnet sonarscanner begin /k:$project /d:sonar.login=$token /d:sonar.host.url=http://localhost:9000 \
+    dotnet sonarscanner begin /k:$SQ_PROJECT_KEY /d:sonar.login=$SQ_AUTH_TOKEN /d:sonar.host.url=http://localhost:9000 \
     /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
     dotnet build
     dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
-    dotnet sonarscanner end /d:sonar.login=$token
+    dotnet sonarscanner end /d:sonar.login=$SQ_AUTH_TOKEN
     echo "SQ: Done. SonarScan completed"
 fi
 
