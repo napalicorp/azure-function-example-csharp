@@ -10,3 +10,5 @@ RUN dotnet tool install --global dotnet-sonarscanner
 RUN dotnet tool install --global dotnet-coverage
 
 RUN apt install openjdk-11-jre -y
+
+ENV PATH="$PATH:/root/.dotnet/tools"

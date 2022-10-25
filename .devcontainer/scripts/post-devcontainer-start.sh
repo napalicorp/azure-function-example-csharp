@@ -16,15 +16,30 @@ load_env_vars() {
     export $(cat $ENV_VAR_FILE | xargs) >/dev/null
 }
 
+wait_for_sq() {
+    max_retry=60
+    counter=0
+    until curl -f -u $SQ_USER:$SQ_PASSWORD "http://localhost:9000/api/projects/search?q=$project_name&format=json"
+    do
+        sleep 1
+        [[ counter -eq $max_retry ]] && echo "Failed!" && exit 1
+        echo "Trying again. Try #$counter"
+        ((counter++))
+    done
+}
+
 setup_sq_project() {
     project_name=$1
     
+    echo "SQ: Wait untill sonarqube is up: $SQ_USER:$SQ_PASSWORD"
+    wait_for_sq
+
     echo "SQ: Checking if project: $project_name exists"
     project_key="null"
-    response=$(curl -f -u $SQ_USER:$SQ_PASSWORD "http://localhost:9000/api/projects/search?q=$project_name&format=json" 2>/dev/null)
+    response=$(curl -f -u $SQ_USER:$SQ_PASSWORD "http://localhost:9000/api/projects/search?q=$project_name&format=json")
     if grep -q "$response" <<< "error";
     then
-        >&2 echo "SQ: Failed to query projects"
+        >&2 echo "SQ: Failed to query projects: $response"
         exit 1
     fi
 
@@ -34,10 +49,10 @@ setup_sq_project() {
         echo "SQ: Project: $project_name does not exist. Attempt to create it."
         response=$(curl -f -u $SQ_USER:$SQ_PASSWORD "http://localhost:9000/api/projects/create" -X POST \
         --header "Content-Type: application/x-www-form-urlencoded" \
-        -d "project=$project_name&name=$project_name" 2>/dev/null)
+        -d "project=$project_name&name=$project_name")
         if grep -q "$response" <<< "error";
         then
-            >&2 echo "ERR: Failed to create the project"
+            >&2 echo "ERR: Failed to create the project: $response"
             exit 1
         fi
 
@@ -51,10 +66,10 @@ setup_sq_project() {
     token_id=$(cat /proc/sys/kernel/random/uuid)
     response=$(curl -f -u $SQ_USER:$SQ_PASSWORD "http://localhost:9000/api/user_tokens/generate" -X POST \
         --header "Content-Type: application/x-www-form-urlencoded" \
-        -d "name=$token_id" 2>/dev/null)
+        -d "name=$token_id")
     if grep -q "$response" <<< "error";
     then
-        >&2 echo "ERR: Failed to create the token"
+        >&2 echo "ERR: Failed to create the token: $response"
         exit 1
     fi
     user_token=$(echo $response | jq ".token")
