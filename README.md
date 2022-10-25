@@ -12,3 +12,4 @@ The complete walkthrough of the code is the aim of the [Medium article](https://
 * Azure Functions version: **v4** 
 * .Net framework: **.Net6**
 * Unit tests framework : **XUnit**test1
+test
