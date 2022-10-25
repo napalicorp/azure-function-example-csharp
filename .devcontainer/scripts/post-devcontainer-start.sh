@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SQ_ACCESS_JSON_FILENAME="sq_access.local.json"
+SQ_ACCESS_JSON_FILENAME="/workspace/.devcontainer/sq-access.local.json"
 
 setup_sq_project() {
     project_name=$1

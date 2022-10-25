@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SQ_ACCESS_JSON_FILENAME="sq_access.local.json"
+SQ_ACCESS_JSON_FILENAME="/workspace/.devcontainer/sq-access.local.json"
 
 while getopts ":w:t:p:" opt; do
   case $opt in
@@ -30,9 +30,7 @@ else
     token=$(cat $SQ_ACCESS_JSON_FILENAME | jq -r ".token")
     project=$(cat $SQ_ACCESS_JSON_FILENAME | jq -r ".key")
     echo "SQ: key=$project , token=$token"
-
-    # dotnet tool install --global dotnet-sonarscanner 2>/dev/null
-    # dotnet tool install --global dotnet-coverage 2>/dev/null
+    
     export PATH=$PATH:~/.dotnet/tools
 
     /usr/bin/dependency-check.sh -f JSON -f HTML -s . -o .
