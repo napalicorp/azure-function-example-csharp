@@ -24,5 +24,12 @@ RUN pip3 install pre-commit
 
 # Install other essential tools
 RUN apt install -y vim
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-ENV ZSH_THEME="agnoster"
+RUN apt install -y zsh
+
+# Install oh-my-zsh
+ENV ZSH_THEME agnoster
+RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
+RUN apt-get install -y locales locales-all
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8

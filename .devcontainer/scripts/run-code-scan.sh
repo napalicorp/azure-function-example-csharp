@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENV_VAR_FILE=/etc/local.env
+ENV_VAR_FILE=/workspace/.devcontainer/local.env
 workingDir=$1
 cd $workingDir
 cwd=$(pwd)

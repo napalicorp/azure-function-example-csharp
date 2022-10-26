@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENV_VAR_FILE=/etc/local.env
+ENV_VAR_FILE=/workspace/.devcontainer/local.env
 
 init_env_config() {
     printf "SQ_USER=admin\n" >> $ENV_VAR_FILE

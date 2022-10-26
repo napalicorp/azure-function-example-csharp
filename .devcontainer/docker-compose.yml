@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   app:
     env_file: .env
@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ..:/workspace:cached
+      - .zshrc:/root/.zshrc
     command: sleep infinity
     network_mode: service:sonarqube
 
@@ -18,7 +19,7 @@ services:
       - sonarqube_logs:/opt/sonarqube/logs
     ports:
       - "9000:9000"
-  
+
   dtrack-apiserver:
     image: dependencytrack/apiserver:4.6.0
     deploy:
@@ -28,9 +29,9 @@ services:
       restart_policy:
         condition: on-failure
     ports:
-      - '8081:8080'
+      - "8081:8080"
     volumes:
-      - 'dependency_track:/data'
+      - "dependency_track:/data"
     restart: unless-stopped
 
   dtrack-frontend:
