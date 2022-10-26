@@ -21,3 +21,8 @@ RUN cp gitleaks /usr/local/bin/
 RUN apt update
 RUN apt install -y python3-pip
 RUN pip3 install pre-commit
+
+# Install other essential tools
+RUN apt install -y vim
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+ENV ZSH_THEME="agnoster"

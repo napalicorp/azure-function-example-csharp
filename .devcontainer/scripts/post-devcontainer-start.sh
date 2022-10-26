@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENV_VAR_FILE=/workspace/.devcontainer/local.env
+ENV_VAR_FILE=/etc/local.env
 
 init_env_config() {
     printf "SQ_USER=admin\n" >> $ENV_VAR_FILE
@@ -12,6 +12,7 @@ load_env_vars() {
     if [ ! -f $ENV_VAR_FILE ]
     then
         touch $ENV_VAR_FILE
+        chmod 700 $ENV_VAR_FILE
         init_env_config
     fi
     export $(cat $ENV_VAR_FILE | xargs) >/dev/null

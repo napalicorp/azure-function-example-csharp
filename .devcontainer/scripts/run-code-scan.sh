@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENV_VAR_FILE=/workspace/.devcontainer/local.env
+ENV_VAR_FILE=/etc/local.env
 workingDir=$1
 cd $workingDir
 cwd=$(pwd)
@@ -22,14 +22,14 @@ else
     echo "DT: Running depedency scan"
     repo_name=$(basename -s .git `git config --get remote.origin.url`)
     sln_path=$(find /workspace -name *.sln)
-    dotnet CycloneDX $sln_path -o /workspace/.devcontainer
+    dotnet CycloneDX $sln_path -o /tmp
     curl -X "POST" "http://dtrack-apiserver:8080/api/v1/bom" \
      -H 'Content-Type: multipart/form-data' \
      -H "X-Api-Key: $DT_AUTH_TOKEN" \
      -F "autoCreate=true" \
      -F "projectName=$repo_name" \
      -F "projectVersion=1" \
-     -F "bom=@.devcontainer/bom.xml"
+     -F "bom=@/tmp/bom.xml"
     
     echo "DT: Done. Dependency scan completed"
 fi
