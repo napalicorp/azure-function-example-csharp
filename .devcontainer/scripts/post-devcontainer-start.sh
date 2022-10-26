@@ -109,4 +109,5 @@ echo "Git: Copying post-commit.sh as post-commit git hook"
 cp /workspace/.devcontainer/scripts/post-commit.sh /workspace/.git/hooks/post-commit
 
 echo "Git: Installing GitLeaks as a pre-commit hook"
+cd /workspace/.devcontainer/scripts
 pre-commit install --allow-missing-config
